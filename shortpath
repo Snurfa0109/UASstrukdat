@@ -1,0 +1,90 @@
+#include <iostream>
+#define inf 9999
+
+using namespace std;
+
+int n;
+int table[100][100];
+
+int dijkstra(int mulai, int akhir) {
+    int dist[n+1];
+    bool visited[n+1];
+    int i, j, v;
+    
+    // Inisialisasi dist[x] dengan infinite
+    for (i = 1; i <= n; i++) {
+        dist[i] = inf;
+    }
+    
+    // Inisialisasi visited[x] dengan false
+    for (i = 1; i <= n; i++) {
+        visited[i] = false;
+    }
+
+    dist[mulai] = 0;
+    
+    while (true) {
+        int u = -1;
+        int minDist = inf;
+        
+        // Mencari node yang belum dikunjungi dengan dist terkecil
+        for (i = 1; i <= n; i++) {
+            if (!visited[i] && dist[i] < minDist) {
+                u = i;
+                minDist = dist[i];
+            }
+        }
+        
+        if (u == -1 || dist[u] == inf) {
+            break;
+        }
+        
+        visited[u] = true;
+        
+        // Melakukan relax untuk semua tetangga u
+        for (v = 1; v <= n; v++) {
+            if (table[u][v] != 0) {
+                if (dist[v] > dist[u] + table[u][v]) {
+                    dist[v] = dist[u] + table[u][v];
+                }
+            }
+        }
+    }
+    
+    return dist[akhir];
+}
+
+int main() {
+    int mulai, akhir;
+    int i, j;
+    
+    cout << "Masukkan banyak node: ";
+    cin >> n;
+    
+    cout << "Masukkan jarak antar node secara matriks:\n";
+    
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            cin >> table[i][j];
+        }
+    }
+
+    char jawab;
+    
+    do {
+        cout << "Masukkan node start (awal): ";
+        cin >> mulai;
+        
+        cout << "Masukkan node finish (akhir): ";
+        cin >> akhir;
+        
+        cout << "Jarak minimal dari node " << mulai << " ke " << akhir << ": " << dijkstra(mulai, akhir) << endl;
+        
+        cout << "Apakah ingin melanjutkan program? (y/n): ";
+        cin >> jawab;
+    } while (jawab == 'y' || jawab == 'Y');
+    
+    cout << "Terima Kasih" << endl;
+    
+    return 0;
+}
